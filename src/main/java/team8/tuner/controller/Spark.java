@@ -93,7 +93,7 @@ public class Spark extends ControllerBase<CANSparkMax> {
 				controlType = ControlType.kDutyCycle;
 				break;
 			case SMART_MOTION:
-				controlType = ControlType.kSmartMotion;
+				controlType = ControlType.kPosition;
 				break;
 			case SMART_VELOCITY:
 				controlType = ControlType.kVelocity;
@@ -101,6 +101,7 @@ public class Spark extends ControllerBase<CANSparkMax> {
 			default:
 				throw new IllegalStateException("Unknown control mode!");
 		}
+		System.out.println("Ref: " + reference + " Current: " + getPosition() + " PO: " + getAppliedPercentOutput() + " Mode: " + controlType);
 		mPidController.setReference(reference, controlType, kPidSlotIndex, arbitraryFeedForward);
 	}
 

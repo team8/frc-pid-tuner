@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 public class Robot extends TimedRobot {
 
 	//========================================================//
-	public static final String kConfigFileName = "Drive";
+	public static final String kConfigFileName = "Shooter";
 	//========================================================//
 
 	public static final int kPidSlotIndex = 0;
@@ -40,11 +40,9 @@ public class Robot extends TimedRobot {
 	private boolean mAutomaticControl;
 	private boolean mExtendSolenoid, mEnableCompressor = true;
 	private ControlMode mControlMode = ControlMode.DISABLED;
-	private Compressor mCompressor;
 
 	@Override
 	public void robotInit() {
-		mCompressor = new Compressor(PneumaticsModuleType.CTREPCM);
 		mPowerDistribution = new PowerDistribution();
 	}
 
@@ -90,6 +88,10 @@ public class Robot extends TimedRobot {
 	}
 
 	@Override
+	public void disabledPeriodic() {
+	}
+
+	@Override
 	public void testPeriodic() {
 		handleInput();
 		periodicData();
@@ -116,8 +118,8 @@ public class Robot extends TimedRobot {
 		if (mMaster != null) {
 			double arbitraryFeedForward;
 			switch (mControlMode) {
-				case PERCENT_OUTPUT:
 				case SMART_MOTION:
+				case PERCENT_OUTPUT:
 				case SMART_VELOCITY:
 					arbitraryFeedForward = mConfig.master.gains.ff;
 					if (mConfig.master.armFf != null) {
@@ -136,12 +138,6 @@ public class Robot extends TimedRobot {
 				solenoid.set(mExtendSolenoid);
 			}
 		}
-//		if (mEnableCompressor) {
-//			mCompressor.start();
-//		} else {
-//			mCompressor.stop();
-//		}
-		mCompressor.disable();
 	}
 
 	@Override
@@ -166,7 +162,7 @@ public class Robot extends TimedRobot {
 			setSetPoint(mConfig.xSetPoint);
 		} else if (mInput.getYButtonPressed()) {
 			setSetPoint(mConfig.ySetPoint);
-		} else if (mInput.getRightBumperPressed()) {
+		} else if (mInput.getRightBumper()) {
 			mControlMode = ControlMode.PERCENT_OUTPUT;
 			mReference = mConfig.percentOutputRun + mConfig.master.gains.ff;
 		} else if (mInput.getLeftBumperPressed()) {
@@ -183,6 +179,7 @@ public class Robot extends TimedRobot {
 			} else if (Math.abs(velocityInput) > kDeadBand) {
 				mControlMode = ControlMode.SMART_VELOCITY;
 				mReference = (velocityInput - Math.signum(velocityInput) * kDeadBand) * mConfig.master.gains.v;
+//				mReference *= mConfig.master.velocityConversion;
 				mAutomaticControl = false;
 			} else {
 				if (!mAutomaticControl) {

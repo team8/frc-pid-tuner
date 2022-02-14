@@ -1,5 +1,7 @@
 package team8.tuner.controller;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import team8.tuner.config.Config.SimpleConfig;
 
