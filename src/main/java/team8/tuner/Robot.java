@@ -4,6 +4,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.module.jsonSchema.JsonSchema;
 import com.fasterxml.jackson.module.jsonSchema.JsonSchemaGenerator;
 import edu.wpi.first.wpilibj.*;
+import org.littletonrobotics.junction.LoggedRobot;
+import org.littletonrobotics.junction.Logger;
+import org.littletonrobotics.junction.inputs.LoggedNetworkTables;
+import org.littletonrobotics.junction.io.ByteLogReceiver;
+import org.littletonrobotics.junction.io.LogSocketServer;
 import team8.tuner.config.C;
 import team8.tuner.config.Config;
 import team8.tuner.config.Config.SimpleConfig;
@@ -21,7 +26,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class Robot extends TimedRobot {
+public class Robot extends LoggedRobot {
 
 	//========================================================//
 	public static final String kConfigFileName = "Shooter";
@@ -35,7 +40,6 @@ public class Robot extends TimedRobot {
 	private List<Controller> mSlaves;
 	private List<Solenoid> mSolenoids;
 	private XboxController mInput;
-	private PowerDistribution mPowerDistribution;
 	private double mReference;
 	private boolean mAutomaticControl;
 	private boolean mExtendSolenoid, mEnableCompressor = true;
@@ -43,7 +47,14 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void robotInit() {
-		mPowerDistribution = new PowerDistribution();
+		LoggedNetworkTables.getInstance().addTable("limelight"); // Log & replay "SmartDashboard" values (no tables are logged by default).
+		Logger.getInstance().recordMetadata("ProjectName", "MyProject"); // Set a metadata value
+
+		Logger.getInstance().addDataReceiver(new ByteLogReceiver("/home/lvuser/logs/")); // Log to USB stick (name will be selected automatically)
+		Logger.getInstance().addDataReceiver(new LogSocketServer(5811)); // Provide log data over the network, viewable in Advantage Scope.
+
+		Logger.getInstance().start(); // Start logging! No more data receivers, replay sources, or metadata values may be added.
+		compressor.enableDigital();
 	}
 
 	@Override
@@ -100,7 +111,6 @@ public class Robot extends TimedRobot {
 
 	private void periodicData() {
 		if (mConfig.writeCsv) {
-			logData("totalPdpCurrent", mPowerDistribution.getTotalCurrent());
 			logData("totalControllerCurrent", mMaster.getOutputCurrent() + mSlaves.stream().mapToDouble(Controller::getOutputCurrent).sum());
 			logData("reference", mReference);
 			logData("output", mMaster.getAppliedPercentOutput());

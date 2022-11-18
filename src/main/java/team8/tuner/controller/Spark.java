@@ -93,7 +93,7 @@ public class Spark extends ControllerBase<CANSparkMax> {
 				controlType = ControlType.kDutyCycle;
 				break;
 			case SMART_MOTION:
-				controlType = ControlType.kPosition;
+				controlType = ControlType.kSmartMotion;
 				break;
 			case SMART_VELOCITY:
 				controlType = ControlType.kVelocity;
