@@ -4,6 +4,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.module.jsonSchema.JsonSchema;
 import com.fasterxml.jackson.module.jsonSchema.JsonSchemaGenerator;
 import edu.wpi.first.wpilibj.*;
+import org.eclipse.jetty.util.log.Log;
+import org.littletonrobotics.junction.Logger;
+import org.littletonrobotics.junction.networktables.NT4Publisher;
+import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 import team8.tuner.config.C;
 import team8.tuner.config.Config;
 import team8.tuner.config.Config.SimpleConfig;
@@ -46,6 +50,13 @@ public class Robot extends TimedRobot {
 	public void robotInit() {
 		mCompressor = new Compressor(PneumaticsModuleType.CTREPCM);
 		mPowerDistribution = new PowerDistribution();
+
+		Logger.getInstance().recordMetadata("ProjectName", "PID Tuner");
+		Logger.getInstance().recordOutput("Subsystem", kConfigFileName);
+
+		Logger.getInstance().addDataReceiver(new WPILOGWriter("/media/sda1/"));
+		Logger.getInstance().addDataReceiver(new NT4Publisher());
+		Logger.getInstance().start();
 	}
 
 	@Override
