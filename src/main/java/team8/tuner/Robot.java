@@ -5,6 +5,7 @@ import com.fasterxml.jackson.module.jsonSchema.JsonSchema;
 import com.fasterxml.jackson.module.jsonSchema.JsonSchemaGenerator;
 import edu.wpi.first.wpilibj.*;
 import org.eclipse.jetty.util.log.Log;
+import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.NT4Publisher;
 import org.littletonrobotics.junction.wpilog.WPILOGWriter;
@@ -25,7 +26,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class Robot extends TimedRobot {
+public class Robot extends LoggedRobot {
 
 	//========================================================//
 	public static final String kConfigFileName = "Drive";

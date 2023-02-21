@@ -1,14 +1,16 @@
 {
 	"master": {
-		"id": 2,
-		"type": "FALCON",
+		"id": 11,
+		"type": "SPARK",
+		"velocityConversion": 0.1128205128,
+		"positionConversion": 6.7692307692,
 		"gains": {
 			"ff": 0.0,
-			"f": 0.04781863509,
-			"p": 0.01,
+			"f": 0.00148163606,
+			"p": 0.001,
 			"d": 0.0,
-			"a": 15000.0,
-			"v": 15000.0,
+			"a": 180.0,
+			"v": 90.0,
 			"allowableError": 0.0
 		},
 		"isInverted": true,
@@ -16,24 +18,10 @@
 		"ramp": 0.1
 	},
 	"slaves": [
-		{
-			"id": 3,
-			"type": "FALCON"
-		},
-		{
-			"id": 12,
-			"type": "FALCON",
-			"isInverted": true
-		},
-		{
-			"id": 13,
-			"type": "FALCON",
-			"isInverted": true
-		}
 	],
-	"xboxId": 2,
+	"percentOutputRun": 0.4,
+	"xboxId": 0,
 	"aSetPoint": 0.0,
-	"bSetPoint": 0.0,
-	"xSetPoint": 0.0,
-	"ySetPoint": 0.0
-}
+	"bSetPoint": -2.0,
+	"xSetPoint": -4.0,
+	"ySetPoint": -9.0}
